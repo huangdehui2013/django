@@ -21,7 +21,7 @@ from django.core.cache.backends.base import (
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 
-
+##对外开放的变量
 __all__ = [
     'cache', 'DEFAULT_CACHE_ALIAS', 'InvalidCacheBackendError',
     'CacheKeyWarning', 'BaseCache',
@@ -90,7 +90,10 @@ class CacheHandler(object):
 
 caches = CacheHandler()
 
-
+#封装cache代理
+"""
+定义缓存的操作：基本crud操作
+"""
 class DefaultCacheProxy(object):
     """
     Proxy access to the default Cache object's attributes.
@@ -115,10 +118,11 @@ class DefaultCacheProxy(object):
 
     def __ne__(self, other):
         return caches[DEFAULT_CACHE_ALIAS] != other
-
+        
+#定义全局cache公用
 cache = DefaultCacheProxy()
 
-
+#采用信号量机制关闭创建连接
 def close_caches(**kwargs):
     # Some caches -- python-memcached in particular -- need to do a cleanup at the
     # end of a request cycle. If not implemented in a particular backend
